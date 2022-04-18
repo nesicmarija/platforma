@@ -49,10 +49,14 @@ void Hard::b_transport(pl_t &pl, sc_core::sc_time &offset)  //zakazuje transakci
         case ADDR_STATUS:
           to_uchar(buf, ready);    //kaze da je spreman, dd
           break;
+         case ADDR_CMD:
+          start = to_int(buf);
+          doPivoting(wv_fixed,pivotRow,pivotCol,pivot_fixed);
+          break;
         default:
           pl.set_response_status( tlm::TLM_ADDRESS_ERROR_RESPONSE );
         }
-      if (len != 4) pl.set_response_status( tlm::TLM_BURST_ERROR_RESPONSE );
+      if (len != 5) pl.set_response_status( tlm::TLM_BURST_ERROR_RESPONSE );
       break;
     default:
       pl.set_response_status( tlm::TLM_COMMAND_ERROR_RESPONSE );

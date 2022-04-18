@@ -26,27 +26,8 @@ Soft::~Soft()
 
 void Soft::simplex()
 {
-<<<<<<< HEAD
      num_t wv_fixed[ROWSIZE][COLSIZE];
      num_t pivot_fixed;
-
-=======
-       bool passCheck(const float wv[ROWSIZE][COLSIZE], const float wv_cpy[ROWSIZE][COLSIZE], double delta);
-       bool checkOptimality(float wv[ROWSIZE][COLSIZE]);
-       bool isUnbounded(float wv[ROWSIZE][COLSIZE],int pivotCol);
-       void print(float wv[ROWSIZE][COLSIZE]);
-       void matrixZero(float wv[ROWSIZE][COLSIZE]);
-       void addOnesDiagonal(float wv[ROWSIZE][COLSIZE]);
-       void copyMatrix(float wv_cpy[ROWSIZE][COLSIZE],float wv[ROWSIZE][COLSIZE]);
-       int findPivotCol(float wv[ROWSIZE][COLSIZE]);
-       int findPivotRow(float wv[ROWSIZE][COLSIZE],int pivotCol);
-       void solutions(float wv[ROWSIZE][COLSIZE]);
-       void simplexCalculate(float wv[ROWSIZE][COLSIZE]);
-       
-}
-num_t wv_fixed[ROWSIZE][COLSIZE];
-num_t pivot_fixed;
->>>>>>> 16f89b657ab3111d2ffa4635d7508bd69c1fe06e
 
 /*
     ---------------------------------------------
@@ -97,6 +78,7 @@ num_t pivot_fixed;
 			wv[j][NUMOFVAR+j]=1;  
 		}
 	}
+	//-----------------------------------------------------------------
     //CalculateSimplex 
     int pivotRow;
     int pivotCol;
@@ -167,7 +149,7 @@ num_t pivot_fixed;
 
         pivot=wv[pivotRow][pivotCol];
 
-        //doPivoting(wv,pivotRow,pivotCol,pivot);
+        //doPivoting(wv_fixed,pivotRow,pivotCol,pivot_fixed);
         
         
        /*
