@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 #include <string.h>
 #include <bitset>
 #include <math.h>

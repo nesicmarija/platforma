@@ -5,6 +5,7 @@ Vp::Vp (sc_core::sc_module_name name)
   , soft("Soft")
   , hard("Hard")
   , bram_m("Bram_M")
+  , bram_ctrl("BramCtrl")
   , interconnect("Interconnect")
 {
   soft.interconnect_socket.bind(interconnect.soft_socket);

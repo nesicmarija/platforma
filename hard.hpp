@@ -20,7 +20,9 @@ public:
 protected:
      pl_t pl;
      sc_core::sc_time offset;
-     int width, height, ready;
+     int width, height, ready, start, pivotRow, pivotCol;
+     num_t wv_fixed[ROWSIZE][COLSIZE];
+     num_t pivot_fixed;
      void doPivoting(num_t wv[ROWSIZE][COLSIZE],int pivotRow,int pivotCol,num_t pivot);
      void b_transport(pl_t &pl, sc_core::sc_time &offset);
      num_t read_bram(int addr);

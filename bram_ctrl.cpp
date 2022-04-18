@@ -24,7 +24,7 @@ void BramCtrl::b_transport(pl_t &pl, sc_core::sc_time &offset)
   pl_m.set_data_ptr(buf);
   pl_m.set_response_status( tlm::TLM_INCOMPLETE_RESPONSE );
 
-  bram_re_socket->b_transport(pl_m,offset);
+  bram_m_socket->b_transport(pl_m,offset);
   if (pl_m.is_response_error()) SC_REPORT_ERROR("Bram_M",pl_m.get_response_string().c_str());
 
 

@@ -1,7 +1,7 @@
 #include <systemc>
 #include "vp.hpp"
 
-//using namespace sc_core;
+using namespace sc_core;
 //using namespace tlm;
 
 int sc_main(int argc, char* argv[])

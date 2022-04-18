@@ -28,22 +28,27 @@ void Soft::simplex()
 {
      num_t wv_fixed[ROWSIZE][COLSIZE];
      num_t pivot_fixed;
+     double temp;
+     unsigned char p = 0;
 
 /*
     ---------------------------------------------
     WRITE PART - read from files, write into BRAMs   //MALO PREPRAVITI!!
     ---------------------------------------------
   */
-  baza >> COLSIZE >> ROWSIZE;
 
-  for (int i = 0; i<COLSIZE; ++i) // add A
-    for (int j = 0; j < ROWSIZE; ++j)
-      {
-       
-            baza >> write_val;
-            write_bram(i*ROWSIZE+j,write_val);
+  delay += sc_core::sc_time(50*9.5, sc_core::SC_NS);
+  for (int i = 0; i < ROWSIZE; ++i)
+  {//write matrix A into bram
+        for (int j = 0; j < COLSIZE; ++j)
+        {
+          baza >> temp;  //iz baze u temp
+           write_bram(p, (num_t) temp);//write into bram
+
+  write_hard(ADDR_INIT, 1);//start hardware     
         
       }
+ }
     //MakeMatrix
     float wv[ROWSIZE][COLSIZE];
 	for(int j=0;j<ROWSIZE; j++)
@@ -158,8 +163,8 @@ void Soft::simplex()
     --------------------------------------------
   */
 
-  write_hard(ADDR_WIDTH, width-1); // -1 because thats how the IP was implemented
-  write_hard(ADDR_HEIGHT, height-1);
+  write_hard(ADDR_WIDTH, ROWSIZE-1); // -1 because thats how the IP was implemented
+  write_hard(ADDR_HEIGHT, COLSIZE-1);
 
    write_hard(ADDR_CMD, 1);
   int ready = 1;
@@ -211,10 +216,10 @@ void Soft::simplex()
         cout<<endl<<"Optimal solution is "<<wv[ROWSIZE-1][COLSIZE-1]<<endl;
     }
 
-    return 0;
+    //return 0;
 }
-       
-}
+       }
+
 
   
 

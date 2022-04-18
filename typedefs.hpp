@@ -20,6 +20,8 @@ typedef tlm::tlm_base_protocol_types::tlm_payload_type pl_t;
 #define ADDR_HEIGHT 0x10
 #define ADDR_CMD 0x18
 #define ADDR_STATUS 0x1c
+#define ADDR_INIT 0x30
+
 
 #define VP_ADDR_BRAM_BASE 0x01000000
 #define VP_ADDR_BRAM_L 0x01000000

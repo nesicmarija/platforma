@@ -4,8 +4,12 @@ Hard::Hard(sc_core::sc_module_name name)
   : sc_module(name)
   , width(0)
   , height(0)
+  , start(0)
   , ready(0)
-  , offset(sc_core::SC_ZERO_TIME)
+  , wv_fixed(0)
+  , pivotRow(0)
+  , pivotCol(0)
+  , pivot_fixed(0)
 {
   soft_socket.register_b_transport(this, &Hard::b_transport);
   
@@ -37,7 +41,11 @@ void Hard::b_transport(pl_t &pl, sc_core::sc_time &offset)  //zakazuje transakci
         case ADDR_HEIGHT:
           height = to_int(buf)+1;
           break;
-      
+        
+        case ADDR_CMD:
+          start = to_int(buf);
+          doPivoting(wv_fixed,pivotRow,pivotCol,pivot_fixed);
+          break;
         default:
           pl.set_response_status( tlm::TLM_ADDRESS_ERROR_RESPONSE );
         }
@@ -49,10 +57,7 @@ void Hard::b_transport(pl_t &pl, sc_core::sc_time &offset)  //zakazuje transakci
         case ADDR_STATUS:
           to_uchar(buf, ready);    //kaze da je spreman, dd
           break;
-         case ADDR_CMD:
-          start = to_int(buf);
-          doPivoting(wv_fixed,pivotRow,pivotCol,pivot_fixed);
-          break;
+         
         default:
           pl.set_response_status( tlm::TLM_ADDRESS_ERROR_RESPONSE );
         }
