@@ -23,6 +23,7 @@ void to_char (unsigned char *, string);
 void to_uchar (unsigned char *buf, num_t d);
 int to_int (unsigned char *);
 void to_uchar (unsigned char *, int d);
+void printMatrix(vector<vector<num_t>> &, int, int);//print 2D matrix
 
 int highest_bit(int n);
 int setBitNumber(int n);

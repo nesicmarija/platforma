@@ -28,7 +28,7 @@ void Soft::simplex()
 {
      num_t wv_fixed[ROWSIZE][COLSIZE];
      num_t pivot_fixed;
-     double temp;
+     float temp;
      unsigned char p = 0;
 
 /*
@@ -37,17 +37,28 @@ void Soft::simplex()
     ---------------------------------------------
   */
 
-  delay += sc_core::sc_time(50*9.5, sc_core::SC_NS);
+  offset += sc_core::sc_time(10, sc_core::SC_NS);
   for (int i = 0; i < ROWSIZE; ++i)
   {//write matrix A into bram
         for (int j = 0; j < COLSIZE; ++j)
         {
           baza >> temp;  //iz baze u temp
-           write_bram(p, (num_t) temp);//write into bram
+           offset += sc_core::sc_time(10, sc_core::SC_NS);
+          write_bram(p++, (num_t) temp);//write into bram
 
   write_hard(ADDR_INIT, 1);//start hardware     
-        
+   while(read_hard(ADDR_STATUS_INIT) == 0){//wait for hardware to finish - pooling
+       offset += sc_core::sc_time(1, sc_core::SC_NS);//increment time
+    }
+
+    write_hard(ADDR_CMD, 1);//start hardware
+
+    while(read_hard(ADDR_STATUS) == 0){//wait for hardware to finish - pooling
+        offset += sc_core::sc_time(1, sc_core::SC_NS);//increment time
+   }
+    std::cout << std::endl << "Writing finished." << std::endl;//message
       }
+    
  }
     //MakeMatrix
     float wv[ROWSIZE][COLSIZE];
@@ -218,7 +229,10 @@ void Soft::simplex()
 
     //return 0;
 }
-       }
+//std::cout << std::endl << temp << endl; //print message
+// printMatrix(read, 51, 101);                              //DANAS SE RADI!!  19.4.2022.
+}
+
 
 
   
@@ -229,9 +243,9 @@ void Soft::simplex()
  void Soft::read_bram(sc_dt::uint64 addr, num_t &valM)
 {
   pl_t pl;
-  unsigned char buf[5];
-  pl.set_address((addr*5) | VP_ADDR_BRAM_BASE);
-  pl.set_data_length(5);
+  unsigned char buf[BUFF_SIZE];
+  pl.set_address((addr*BUFF_SIZE) | VP_ADDR_BRAM_BASE);
+  pl.set_data_length(BUFF_SIZE);
   pl.set_data_ptr(buf);
   pl.set_command( tlm::TLM_READ_COMMAND );
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );
@@ -246,10 +260,10 @@ void Soft::simplex()
 void Soft::write_bram(sc_dt::uint64 addr, num_t valM)
 {
   pl_t pl;
-  unsigned char buf[5];
+  unsigned char buf[BUFF_SIZE];
   to_uchar(buf,valM);
-  pl.set_address((addr*5) | VP_ADDR_BRAM_BASE);
-  pl.set_data_length(5);
+  pl.set_address((addr*BUFF_SIZE) | VP_ADDR_BRAM_BASE);
+  pl.set_data_length(BUFF_SIZE);
   pl.set_data_ptr(buf);
   pl.set_command( tlm::TLM_WRITE_COMMAND );
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );
@@ -260,9 +274,9 @@ void Soft::write_bram(sc_dt::uint64 addr, num_t valM)
 int Soft::read_hard(sc_dt::uint64 addr)
 {
   pl_t pl;
-  unsigned char buf[5];
-  pl.set_address((addr*5) | VP_ADDR_HARD_BASE);
-  pl.set_data_length(5);
+  unsigned char buf[BUFF_SIZE];
+  pl.set_address((addr*BUFF_SIZE) | VP_ADDR_HARD_BASE);
+  pl.set_data_length(BUFF_SIZE);
   pl.set_data_ptr(buf);
   pl.set_command( tlm::TLM_READ_COMMAND );
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );
@@ -274,10 +288,10 @@ int Soft::read_hard(sc_dt::uint64 addr)
 void Soft::write_hard(sc_dt::uint64 addr, int val)
 {
   pl_t pl;
-  unsigned char buf[5];
+  unsigned char buf[BUFF_SIZE];
   to_uchar (buf, val);
-  pl.set_address((addr*5) | VP_ADDR_HARD_BASE);
-  pl.set_data_length(5);
+  pl.set_address((addr*BUFF_SIZE) | VP_ADDR_HARD_BASE);
+  pl.set_data_length(BUFF_SIZE);
   pl.set_data_ptr(buf);
   pl.set_command( tlm::TLM_WRITE_COMMAND );
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );

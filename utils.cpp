@@ -1,5 +1,6 @@
 #include "utils.hpp"            //PREPRAVITI NA CASU!!  //PREPRAVITI NA CASU!!  //PREPRAVITI NA CASU!!
 
+
 char flip(char c) {return (c == '0')? '1': '0';}   //za negativne vred.
 
 string twos_complement(string bin)
@@ -81,20 +82,6 @@ void to_uchar(unsigned char *c, num_t d)
   to_char(c,d.to_bin());
 }
 
-double to_fixed (unsigned char *buf)   
- {
-   int val_i;
-   double val_d;
-   fix_t val(DATA_WIDTH, FIXED_POINT_WIDTH);
-   for (unsigned i = 0; i != CHARS_AMOUNT; ++i)
-     {
-       val_i += (int)buf[i] << (CHAR_LEN * (CHARS_AMOUNT - 1 - i));
-     }
-   val_d = (double)val_i;
-   val = val_d;
-   val  >>= FIXED_POINT_WIDTH;
-   return val;
- }
 
        
 
@@ -137,5 +124,15 @@ int setBitNumber(int n)
   n |= n >> 16;
   n = n + 1;
   return n;
+}
+
+void printMatrix (vector<vector<num_t>> &x, int dim1, int dim2){
+	for(int i = 0; i < dim1; i++){
+		for(int j = 0; j < dim2; j++){
+			cout << x[i][j] << ' ';
+		}
+		cout << endl;
+	}
+	cout << endl;
 }
 

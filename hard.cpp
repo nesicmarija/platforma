@@ -6,10 +6,8 @@ Hard::Hard(sc_core::sc_module_name name)
   , height(0)
   , start(0)
   , ready(0)
-  , wv_fixed(0)
   , pivotRow(0)
   , pivotCol(0)
-  , pivot_fixed(0)
 {
   soft_socket.register_b_transport(this, &Hard::b_transport);
   
@@ -49,7 +47,7 @@ void Hard::b_transport(pl_t &pl, sc_core::sc_time &offset)  //zakazuje transakci
         default:
           pl.set_response_status( tlm::TLM_ADDRESS_ERROR_RESPONSE );
         }
-      if (len != 4) pl.set_response_status( tlm::TLM_BURST_ERROR_RESPONSE );  //do kraja bafera
+      if (len != BUFF_SIZE) pl.set_response_status( tlm::TLM_BURST_ERROR_RESPONSE );  //do kraja bafera
       break;
     case tlm::TLM_READ_COMMAND:  //read
       switch(addr)
@@ -61,7 +59,7 @@ void Hard::b_transport(pl_t &pl, sc_core::sc_time &offset)  //zakazuje transakci
         default:
           pl.set_response_status( tlm::TLM_ADDRESS_ERROR_RESPONSE );
         }
-      if (len != 5) pl.set_response_status( tlm::TLM_BURST_ERROR_RESPONSE );
+      if (len != BUFF_SIZE) pl.set_response_status( tlm::TLM_BURST_ERROR_RESPONSE );
       break;
     default:
       pl.set_response_status( tlm::TLM_COMMAND_ERROR_RESPONSE );
@@ -72,6 +70,8 @@ void Hard::b_transport(pl_t &pl, sc_core::sc_time &offset)  //zakazuje transakci
 
 void Hard::doPivoting(num_t wv[ROWSIZE][COLSIZE],int pivotRow,int pivotCol,num_t pivot)
 {
+    num_t wv_fixed[ROWSIZE][COLSIZE];
+    num_t pivot_fixed;
     num_t newRow[COLSIZE];
     num_t pivotColVal[ROWSIZE];
     num_t nr;
@@ -117,9 +117,9 @@ void Hard::doPivoting(num_t wv[ROWSIZE][COLSIZE],int pivotRow,int pivotCol,num_t
 num_t Hard::read_bram(int addr) 
 {
   pl_t pl;
-  unsigned char buf[5];
-  pl.set_address(addr*5);
-  pl.set_data_length(5);
+  unsigned char buf[BUFF_SIZE];
+  pl.set_address(addr*BUFF_SIZE);
+  pl.set_data_length(BUFF_SIZE);
   pl.set_data_ptr(buf);
   pl.set_command( tlm::TLM_READ_COMMAND );
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );
@@ -133,10 +133,10 @@ num_t Hard::read_bram(int addr)
 void Hard::write_bram(int addr, num_t val)
 {
   pl_t pl;
-  unsigned char buf[5];
+  unsigned char buf[BUFF_SIZE];
   to_uchar(buf,val);
-  pl.set_address(addr*5);  //postavi adresu u bram na svaka 4 
-  pl.set_data_length(5);  //velicina podatka=4
+  pl.set_address(addr*BUFF_SIZE);  //postavi adresu u bram na svaka 4 
+  pl.set_data_length(BUFF_SIZE);  //velicina podatka=4
   pl.set_data_ptr(buf);      //pointuje na adresu
   pl.set_command( tlm::TLM_WRITE_COMMAND ); //komanda za upis
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );  //ili ne
