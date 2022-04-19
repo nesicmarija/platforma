@@ -39,10 +39,11 @@ relative to the current simulation time.*/
       // std::cout << "sending to hard" << std::endl;
       pl.set_address(taddr);
       hard_socket->b_transport(pl, offset);  //init_socket->b_transport(trans, delay);
-      pl.set_address(addr); 
+     pl.set_address(addr); 
        /*The method operator-> of the target socket shall call method operator-> of the port in the target socket
        (on the backward path), and shall return the value returned by operator-> of the port.*/
-    }
+    } 
+    
 	else
     {
       SC_REPORT_ERROR("Interconnect", "Wrong address.");

@@ -14,7 +14,9 @@ public:
   Bram (sc_core::sc_module_name name);
   ~Bram();
   
-  tlm_utils::simple_target_socket<Bram> bram_port;
+  tlm_utils::simple_target_socket<Bram> bram_port_a;
+  tlm_utils::simple_target_socket<Bram> bram_port_b;
+  
   
    /*
      tlm_utils::simple_target_socket<Interconnect> targ_socket;

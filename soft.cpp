@@ -26,10 +26,6 @@ Soft::~Soft()
 
 void Soft::simplex()
 {
-     num_t wv_fixed[ROWSIZE][COLSIZE];
-     num_t pivot_fixed;
-     float temp;
-     unsigned char p = 0;
 
 /*
     ---------------------------------------------
@@ -229,8 +225,7 @@ void Soft::simplex()
 
     //return 0;
 }
-//std::cout << std::endl << temp << endl; //print message
-// printMatrix(read, 51, 101);                              //DANAS SE RADI!!  19.4.2022.
+                           //DANAS SE RADI!!  19.4.2022.
 }
 
 

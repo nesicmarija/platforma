@@ -19,7 +19,7 @@ public:
 
 protected:
   Soft soft;
-  Bram bram_m;
+  Bram bram;
   Hard hard;
   BramCtrl bram_ctrl;
   Interconnect interconnect;

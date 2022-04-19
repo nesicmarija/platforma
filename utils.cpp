@@ -126,13 +126,3 @@ int setBitNumber(int n)
   return n;
 }
 
-void printMatrix (vector<vector<num_t>> &x, int dim1, int dim2){
-	for(int i = 0; i < dim1; i++){
-		for(int j = 0; j < dim2; j++){
-			cout << x[i][j] << ' ';
-		}
-		cout << endl;
-	}
-	cout << endl;
-}
-

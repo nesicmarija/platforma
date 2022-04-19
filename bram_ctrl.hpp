@@ -13,7 +13,7 @@ public:
   BramCtrl (sc_core::sc_module_name name);
   ~BramCtrl ();
   tlm_utils::simple_target_socket<BramCtrl> soft_socket;
-  tlm_utils::simple_initiator_socket<BramCtrl> bram_m_socket;
+  tlm_utils::simple_initiator_socket<BramCtrl> bram_socket;
 
 protected:
   void b_transport (pl_t &, sc_core::sc_time &);

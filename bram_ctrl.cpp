@@ -20,12 +20,12 @@ void BramCtrl::b_transport(pl_t &pl, sc_core::sc_time &offset)
 
   pl_m.set_command(cmd);
   pl_m.set_address(addr);
-  pl_m.set_data_length(5);
+  pl_m.set_data_length(BUFF_SIZE);
   pl_m.set_data_ptr(buf);
   pl_m.set_response_status( tlm::TLM_INCOMPLETE_RESPONSE );
 
-  bram_m_socket->b_transport(pl_m,offset);
-  if (pl_m.is_response_error()) SC_REPORT_ERROR("Bram_M",pl_m.get_response_string().c_str());
+  bram_socket->b_transport(pl_m,offset);
+  if (pl_m.is_response_error()) SC_REPORT_ERROR("Bram",pl_m.get_response_string().c_str());
 
 
 }

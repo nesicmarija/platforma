@@ -24,6 +24,11 @@ protected:
        sc_core::sc_time offset;
        std::ifstream baza;
        
+       num_t wv_fixed[ROWSIZE][COLSIZE];
+       num_t pivot_fixed;
+       float temp;
+       unsigned char p = 0;
+       
        void read_bram(sc_dt::uint64 addr, num_t &valM);
        void write_bram(sc_dt::uint64 addr, num_t valM);
        int read_hard(sc_dt::uint64 addr);
