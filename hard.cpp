@@ -9,8 +9,9 @@ Hard::Hard(sc_core::sc_module_name name)
   , pivotRow(0)
   , pivotCol(0)
 {
-  soft_socket.register_b_transport(this, &Hard::b_transport);
-  
+  from_bram.register_b_transport(this, &Hard::b_transport);
+  from_interconnect_int.register_b_transport(this, &Hard::b_transport);
+  from_interconnect_num_t.register_b_transport(this, &Hard::b_transport);
   SC_REPORT_INFO("Hard", "Constructed.");
 }
 
@@ -125,7 +126,7 @@ num_t Hard::read_bram(int addr)
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );
   sc_core::sc_time offset = sc_core::SC_ZERO_TIME;
 
-    bram_socket->b_transport(pl, offset);
+   to_bram->b_transport(pl, offset);
   
   return to_fixed(buf);
 }
@@ -141,7 +142,7 @@ void Hard::write_bram(int addr, num_t val)
   pl.set_command( tlm::TLM_WRITE_COMMAND ); //komanda za upis
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );  //ili ne
   
-    bram_socket->b_transport(pl, offset);
+   to_bram->b_transport(pl, offset);
  
 }
 

@@ -14,8 +14,10 @@ public:
   // SC_HAS_PROCESS(Hard);
      Hard(sc_core::sc_module_name name);
      ~Hard();
-     tlm_utils::simple_initiator_socket<Hard> bram_socket;
-     tlm_utils::simple_target_socket<Hard> soft_socket;
+     tlm_utils::simple_initiator_socket<Hard> to_bram;
+     tlm_utils::simple_target_socket<Hard> from_bram; 
+     tlm_utils::simple_target_socket<Hard> from_interconnect_int; 
+     tlm_utils::simple_target_socket<Hard> from_interconnect_num_t; 
 
 protected:
      pl_t pl;

@@ -244,7 +244,7 @@ void Soft::simplex()
   pl.set_data_ptr(buf);
   pl.set_command( tlm::TLM_READ_COMMAND );
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );
-  interconnect_socket->b_transport(pl,offset);
+  to_interconnect->b_transport(pl,offset);
 
   valM = to_fixed(buf);
 
@@ -262,7 +262,7 @@ void Soft::write_bram(sc_dt::uint64 addr, num_t valM)
   pl.set_data_ptr(buf);
   pl.set_command( tlm::TLM_WRITE_COMMAND );
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );
-  interconnect_socket->b_transport(pl,offset);
+  to_interconnect->b_transport(pl,offset);
 }
 
 
@@ -276,7 +276,7 @@ int Soft::read_hard(sc_dt::uint64 addr)
   pl.set_command( tlm::TLM_READ_COMMAND );
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );
   sc_core::sc_time offset = sc_core::SC_ZERO_TIME;
-  interconnect_socket->b_transport(pl,offset);
+  to_interconnect->b_transport(pl,offset);
   return to_int(buf);
 }
 
@@ -290,7 +290,7 @@ void Soft::write_hard(sc_dt::uint64 addr, int val)
   pl.set_data_ptr(buf);
   pl.set_command( tlm::TLM_WRITE_COMMAND );
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );
-  interconnect_socket->b_transport(pl,offset);
+  to_interconnect->b_transport(pl,offset);
 }
 
 

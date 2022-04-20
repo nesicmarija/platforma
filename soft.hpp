@@ -16,7 +16,7 @@ public:
        Soft(sc_core::sc_module_name name);
        ~Soft();
          
-       tlm_utils::simple_initiator_socket<Soft> interconnect_socket;
+       tlm_utils::simple_initiator_socket<Soft>to_interconnect; 
 
 protected:
        void simplex();

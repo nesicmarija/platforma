@@ -1,10 +1,9 @@
 #include "bram.hpp"
 
-Bram::Bram(sc_core::sc_module_name name) :
-   sc_module(name)
+Bram::Bram(sc_core::sc_module_name name): sc_module(name)
 {
-  bram_port_a.register_b_transport(this, &Bram::b_transport);  //targ_socket.register_b_transport( this, &Interconnect::b_transport);
-  bram_port_b.register_b_transport(this, &Bram::b_transport);
+  from_interconnect.register_b_transport(this, &Bram::b_transport);  
+  from_hw.register_b_transport(this, &Bram::b_transport);  
   mem.reserve(MEM_RESERVED);
 
   SC_REPORT_INFO("BRAM", "Constructed.");
@@ -17,10 +16,39 @@ Bram::~Bram()
 
 void Bram::b_transport(pl_t &pl, sc_core::sc_time &offset)
 {
-  tlm::tlm_command cmd = pl.get_command();   
-  sc_dt::uint64 addr = pl.get_address();    
-  unsigned int len = pl.get_data_length();  
-  unsigned char *buf = pl.get_data_ptr();    
+    tlm::tlm_command cmd = pl.get_command(); //get payload command  
+    sc_dt::uint64 addr = pl.get_address(); //get payload address 
+    unsigned int len = pl.get_data_length(); //get payload length 
+    unsigned char *buf = pl.get_data_ptr(); //get payload data
+       
+    switch(cmd)
+     {
+          case tlm::TLM_WRITE_COMMAND:              //copy from data array to target
+          {  
+             for (unsigned int i = 0; i < len; ++i)
+             {
+                 mem[addr++] = buf[i];//write into memory
+             }
+             pl.set_response_status( tlm::TLM_OK_RESPONSE );  //succesful
+             
+          break;
+          }
+          case tlm::TLM_READ_COMMAND:                //copy from target to data_array 
+          {
+             for (unsigned int i = 0; i < len; ++i)
+             {
+               buf[i] = mem[addr++]; //read from memory
+             }
+               pl.set_response_status( tlm::TLM_OK_RESPONSE );  //succesful
+          break;
+          }
+          default:
+             pl.set_response_status( tlm::TLM_COMMAND_ERROR_RESPONSE );  //unable to execute command
+    }
+
+  offset += sc_core::sc_time(10, sc_core::SC_NS);
+}
+
 /*
    generic payload example
    
@@ -35,30 +63,3 @@ void Bram::b_transport(pl_t &pl, sc_core::sc_time &offset)
     if(adr+len >m_length) {
       trans.set_response_status(tlm::TLM_ADDRESS_ERROR_RESPONCE);  //Check for storage overflow
 */
-     switch(cmd)
-     {
-          case tlm::TLM_WRITE_COMMAND:              //copy from data array to target
-          {  
-             for (unsigned int i = 0; i < len; ++i)
-             {
-                 mem[addr++] = buf[i];
-             }
-             pl.set_response_status( tlm::TLM_OK_RESPONSE );  //succesful
-             
-          break;
-          }
-          case tlm::TLM_READ_COMMAND:                //copy from target to data_array 
-          {
-             for (unsigned int i = 0; i < len; ++i)
-             {
-               buf[i] = mem[addr++];
-             }
-               pl.set_response_status( tlm::TLM_OK_RESPONSE );  //succesful
-          break;
-          }
-          default:
-             pl.set_response_status( tlm::TLM_COMMAND_ERROR_RESPONSE );  //unable to execute command
-    }
-
-  offset += sc_core::sc_time(10, sc_core::SC_NS);
-}
