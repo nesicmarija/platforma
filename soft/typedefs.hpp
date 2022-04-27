@@ -15,8 +15,6 @@
 #define I 16 // whole part witdh
 #define Q sc_dt::SC_TRN // quantization
 #define O sc_dt::SC_WRAP // overflow
-#define DELILAC 100 ///for normalization
-#define QUOT 10 ///for normalization
 
 typedef sc_dt::sc_fixed_fast <W, I, Q, O> num_t;
 

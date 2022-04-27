@@ -126,7 +126,7 @@ num_t Hard::read_bram(int addr)
   pl.set_response_status ( tlm::TLM_INCOMPLETE_RESPONSE );
   sc_core::sc_time offset = sc_core::SC_ZERO_TIME;
 
-   to_bram->b_transport(pl, offset);
+   to_bram->b_transport(pl, offset);  //from hard to bram
   
   return to_fixed(buf);
 }

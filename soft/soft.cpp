@@ -2,8 +2,6 @@
 #include "typedefs.hpp"
 #include "utils.hpp"
 
-
-
 SC_HAS_PROCESS(Soft);
 
 Soft::Soft(sc_core::sc_module_name name)  
@@ -32,9 +30,7 @@ void Soft::simplex()
     WRITE PART - read from files, write into BRAMs   //MALO PREPRAVITI!!
     ---------------------------------------------
   */
-  
-  float temp;
-  unsigned char p = 0; 
+
   offset += sc_core::sc_time(10, sc_core::SC_NS);
   for (int i = 0; i < ROWSIZE; ++i)
   {//write matrix A into bram
@@ -43,12 +39,11 @@ void Soft::simplex()
           baza >> temp;  //iz baze u temp
            offset += sc_core::sc_time(10, sc_core::SC_NS);
           write_bram(p++, (num_t) temp);//write into bram
-	}
-  }
 
   write_hard(ADDR_INIT, 1);//start hardware     
    while(read_hard(ADDR_STATUS_INIT) == 0){//wait for hardware to finish - pooling
        offset += sc_core::sc_time(1, sc_core::SC_NS);//increment time
+    }
 
     write_hard(ADDR_CMD, 1);//start hardware
 
@@ -58,7 +53,7 @@ void Soft::simplex()
     std::cout << std::endl << "Writing finished." << std::endl;//message
       }
     
- 
+ }
     //MakeMatrix
     float wv[ROWSIZE][COLSIZE];
 	for(int j=0;j<ROWSIZE; j++)
@@ -86,16 +81,7 @@ void Soft::simplex()
 		}
     }
     myFile.close();
-	/* //OVO JE DEO ZA NORMALIZACIJU ********NOVO!*********
-	for(int j=0;j<ROWSIZE; j++)
-	{
-		for(int i =0;i<COLSIZE;i++)
-		{
-			wv[j][i]=wv[j][i]/QUOT;
-		}
-		wv[j][COLSIZE-1]=wv[j][COLSIZE-1]/DELILAC;
-	}
-	*/
+
 	for(int j=0;j<ROWSIZE-1;j++)
 	{
 		{
@@ -239,6 +225,9 @@ void Soft::simplex()
 }
                            //DANAS SE RADI!!  19.4.2022.
 }
+
+
+
   
 
 
@@ -266,7 +255,7 @@ void Soft::write_bram(sc_dt::uint64 addr, num_t valM)
   pl_t pl;
   unsigned char buf[BUFF_SIZE];
   to_uchar(buf,valM);
-  pl.set_address((addr*BUFF_SIZE) | VP_ADDR_BRAM_BASE);
+  pl.set_address((addr/**BUFF_SIZE)*/ | VP_ADDR_BRAM_BASE);
   pl.set_data_length(BUFF_SIZE);
   pl.set_data_ptr(buf);
   pl.set_command( tlm::TLM_WRITE_COMMAND );
